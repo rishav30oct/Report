@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 public class BaseClass {
     public static ExtentReports reports;
     public static WebDriver driver;
-   public static ExtentTest test;
+    public static ExtentTest test;
     @BeforeSuite
     public void configBS(){
         //Extent report configuration
@@ -34,30 +34,31 @@ public class BaseClass {
     }
     @BeforeClass
     public void launchBrowser() throws Throwable {
-        String browserName=FileUtility.getPropertyValue("browser");
-        if(browserName.equalsIgnoreCase("chrome")){
-            WebDriverManager.chromedriver().setup();
-            driver=new ChromeDriver();
-        }else if(browserName.equalsIgnoreCase("firefox")){
-            WebDriverManager.firefoxdriver().setup();
-            driver=new FirefoxDriver();
-        }
-        else{
-            System.out.println("browser name is invalid: "+browserName);
-        }
-        driver.get(FileUtility.getPropertyValue("url"));
-        driver.manage().window().maximize();
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+       
     }
     @BeforeMethod
-    public void login(){
+    public void login() throws Throwable{
+    	 String browserName=FileUtility.getPropertyValue("browser");
+         if(browserName.equalsIgnoreCase("chrome")){
+             WebDriverManager.chromedriver().setup();
+             driver=new ChromeDriver();
+         }else if(browserName.equalsIgnoreCase("firefox")){
+             WebDriverManager.firefoxdriver().setup();
+             driver=new FirefoxDriver();
+         }
+         else{
+             System.out.println("browser name is invalid: "+browserName);
+         }
+         driver.get(FileUtility.getPropertyValue("url"));
+         driver.manage().window().maximize();
+         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         driver.findElement(By.name("user_name")).sendKeys("admin");
         driver.findElement(By.name("user_password")).sendKeys("admin", Keys.ENTER);
     }
 
     @AfterMethod
     public void logOut(){
-        driver.quit();
+        driver.close();
     }
 
     @AfterClass
